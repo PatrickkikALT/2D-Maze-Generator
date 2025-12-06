@@ -8,8 +8,8 @@ using UnityEngine.Tilemaps;
 
 public class MazeGenerator : MonoBehaviour {
   [Header("Maze Settings")] 
-  public int width;
-  public int height;
+  [Range(1, 250)] public int width;
+  [Range(1, 250)] public int height;
   public ulong seed; //ulong allows for biggest seed
 
   [Header("Visualization")] 
@@ -17,7 +17,7 @@ public class MazeGenerator : MonoBehaviour {
   public TileBase wallTile;
   public Tilemap tilemap;
   public TMP_Text loadingText;
-  public int chunkSize;
+  [MultipleOf(16)] public int chunkSize;
 
   private NativeArray<byte> _gridNative;
   private JobHandle _jobHandle;
@@ -25,7 +25,9 @@ public class MazeGenerator : MonoBehaviour {
   private byte[] _managedGrid;
   private bool _jobScheduled = false;
   private MoveToMaze _moveCamera;
-  
+  private bool _finishedClearing;
+  private int _previousDrawnHeight;
+  private int _previousDrawnWidth;
   public static MazeGenerator Instance { get; private set; }
 
   public void Awake() {
@@ -95,9 +97,10 @@ public class MazeGenerator : MonoBehaviour {
   //not only does this look better for what im going for, it also prevents having to draw the entire tilemap in one frame
   //which causes a huge fps dip
   private IEnumerator DrawTilemap(byte[] grid) {
-    //TODO: replace with new coroutine that disables old tilemap and removes it in the background
-    tilemap.ClearAllTiles();
-
+    StartCoroutine(ClearTilemap());
+    yield return new WaitUntil(() => _finishedClearing);
+    _previousDrawnHeight = height;
+    _previousDrawnWidth = width;
     for (int y0 = 0; y0 < height; y0 += chunkSize) {
       for (int x0 = 0; x0 < width; x0 += chunkSize) {
         int cw = Mathf.Min(chunkSize, width - x0);
@@ -114,9 +117,24 @@ public class MazeGenerator : MonoBehaviour {
         }
 
         tilemap.SetTilesBlock(bounds, tiles);
-
         yield return null;
       }
     }
+  }
+
+  private IEnumerator ClearTilemap() {
+    _finishedClearing = false;
+    for (int y0 = 0; y0 < _previousDrawnHeight; y0 += chunkSize) {
+      for (int x0 = 0; x0 < _previousDrawnWidth; x0 += chunkSize) {
+        int cw = Mathf.Min(chunkSize, _previousDrawnWidth - x0);
+        int ch = Mathf.Min(chunkSize, _previousDrawnHeight - y0);
+        BoundsInt bounds = new BoundsInt(x0, y0, 0, cw, ch, 1);
+        TileBase[] empty = new TileBase[cw * ch];
+        tilemap.SetTilesBlock(bounds, empty);
+        yield return null;
+      }
+    }
+
+    _finishedClearing = true;
   }
 }

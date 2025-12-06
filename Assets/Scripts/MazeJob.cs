@@ -14,6 +14,7 @@ public struct MazeJob : IJob {
     int cells = width * height;
     for (int i = 0; i < cells; i++) outGrid[i] = 0;
 
+    //unity's built in random isnt compatible with burst so we use Unity.Mathematics.Random instead.
     Random rng = new Random((uint)(seed == 0 ? 1 : seed));
 
     int sx = 1;
@@ -57,78 +58,25 @@ public struct MazeJob : IJob {
     }
 
     stack.Dispose();
-    NativeList<int> top = new NativeList<int>(Allocator.Temp);
-    NativeList<int> bottom = new NativeList<int>(Allocator.Temp);
-    NativeList<int> left = new NativeList<int>(Allocator.Temp);
-    NativeList<int> right = new NativeList<int>(Allocator.Temp);
+    
+    int entranceX = 1;
+    int entranceY = 1;
 
-    for (int x = 1; x < width - 1; x++) {
-      if (Get(outGrid, x, 1) == 1) top.Add(Pack(x, 0));
-      if (Get(outGrid, x, height - 2) == 1) bottom.Add(Pack(x, height - 1));
-    }
+    Set(outGrid, entranceX, entranceY, 1);
+    Set(outGrid, entranceX, 0, 1);
+    
+    int exitX = width - 2;
+    int exitY = height - 2;
+    
+    if ((exitX & 1) == 0) exitX--;
+    if ((exitY & 1) == 0) exitY--;
+    
+    exitX = math.max(1, exitX);
+    exitY = math.max(1, exitY);
+    
+    Set(outGrid, exitX, exitY, 1);
+    Set(outGrid, width - 1, exitY, 1);
 
-    for (int y = 1; y < height - 1; y++) {
-      if (Get(outGrid, 1, y) == 1) left.Add(Pack(0, y));
-      if (Get(outGrid, width - 2, y) == 1) right.Add(Pack(width - 1, y));
-    }
-
-    Edge entranceEdge = PickNonEmptyEdge(ref rng, top, bottom, left, right, exclude: (Edge)(-1));
-    Edge exitEdge = PickNonEmptyEdge(ref rng, top, bottom, left, right, exclude: entranceEdge);
-
-    int epacked = PickRandomFromEdge(ref rng, entranceEdge, top, bottom, left, right);
-    int ex = UnpackX(epacked);
-    int ey = UnpackY(epacked);
-    Set(outGrid, ex, ey, 1);
-
-    int opacked = PickRandomFromEdge(ref rng, exitEdge, top, bottom, left, right);
-    int ox = UnpackX(opacked);
-    int oy = UnpackY(opacked);
-    Set(outGrid, ox, oy, 1);
-
-    top.Dispose();
-    bottom.Dispose();
-    left.Dispose();
-    right.Dispose();
-  }
-
-  private Edge PickNonEmptyEdge(ref Unity.Mathematics.Random rng, NativeList<int> top, NativeList<int> bottom,
-    NativeList<int> left, NativeList<int> right, Edge exclude) {
-    for (int i = 0; i < 8; i++) {
-      Edge e = rng.NextEdge();
-      if (e == exclude) continue;
-      if (EdgeHasCandidates(e, top, bottom, left, right)) return e;
-    }
-
-    if (exclude != Edge.TOP && EdgeHasCandidates(Edge.TOP, top, bottom, left, right)) return Edge.TOP;
-    if (exclude != Edge.BOTTOM && EdgeHasCandidates(Edge.BOTTOM, top, bottom, left, right)) return Edge.BOTTOM;
-    if (exclude != Edge.LEFT && EdgeHasCandidates(Edge.LEFT, top, bottom, left, right)) return Edge.LEFT;
-    if (exclude != Edge.RIGHT && EdgeHasCandidates(Edge.RIGHT, top, bottom, left, right)) return Edge.RIGHT;
-
-    return Edge.TOP;
-  }
-
-  private bool EdgeHasCandidates(Edge e, NativeList<int> top, NativeList<int> bottom, NativeList<int> left,
-    NativeList<int> right) {
-    switch (e) {
-      case Edge.TOP: return top.Length > 0;
-      case Edge.BOTTOM: return bottom.Length > 0;
-      case Edge.LEFT: return left.Length > 0;
-      case Edge.RIGHT: return right.Length > 0;
-    }
-
-    return false;
-  }
-
-  private int PickRandomFromEdge(ref Unity.Mathematics.Random rng, Edge e, NativeList<int> top, NativeList<int> bottom,
-    NativeList<int> left, NativeList<int> right) {
-    switch (e) {
-      case Edge.TOP: return top[rng.NextInt(0, top.Length)];
-      case Edge.BOTTOM: return bottom[rng.NextInt(0, bottom.Length)];
-      case Edge.LEFT: return left[rng.NextInt(0, left.Length)];
-      case Edge.RIGHT: return right[rng.NextInt(0, right.Length)];
-    }
-
-    return top[0];
   }
 
   private void TryAddNeighbour(int x, int y, ref NativeList<int> list) {

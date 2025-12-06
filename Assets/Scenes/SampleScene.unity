@@ -155,7 +155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.020479169, y: 0.4207037}
   m_AnchorMax: {x: 0.17860416, y: 0.483}
-  m_AnchoredPosition: {x: -0.14477539, y: -0.6826019}
+  m_AnchoredPosition: {x: -0.14477539, y: -0.6826172}
   m_SizeDelta: {x: -0.58110046, y: 0.80550003}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &16014985
@@ -238,8 +238,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1418374208}
-        m_TargetAssemblyTypeName: MazeGenerator, Assembly-CSharp
+      - m_Target: {fileID: 1272971575}
+        m_TargetAssemblyTypeName: MazeUI, Assembly-CSharp
         m_MethodName: SetSeed
         m_Mode: 0
         m_Arguments:
@@ -690,7 +690,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.020479169, y: 0.33100003}
   m_AnchorMax: {x: 0.17860416, y: 0.37100002}
-  m_AnchoredPosition: {x: -0.8905029, y: -0.5}
+  m_AnchoredPosition: {x: -0.890625, y: -0.5}
   m_SizeDelta: {x: -0.5811, y: -1.8135986}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &338979278
@@ -773,9 +773,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1418374208}
-        m_TargetAssemblyTypeName: MazeGenerator, Assembly-CSharp
-        m_MethodName: SetSeed
+      - m_Target: {fileID: 1272971575}
+        m_TargetAssemblyTypeName: MazeUI, Assembly-CSharp
+        m_MethodName: SetHeight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -927,8 +927,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1418374208}
-        m_TargetAssemblyTypeName: MazeGenerator, Assembly-CSharp
+      - m_Target: {fileID: 1272971575}
+        m_TargetAssemblyTypeName: MazeUI, Assembly-CSharp
         m_MethodName: Generate
         m_Mode: 1
         m_Arguments:
@@ -1055,7 +1055,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter generation seed
+  m_text: 'Enter width
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1511,6 +1513,7 @@ GameObject:
   - component: {fileID: 1272971573}
   - component: {fileID: 1272971572}
   - component: {fileID: 1272971571}
+  - component: {fileID: 1272971575}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1605,6 +1608,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1272971575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272971570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f9301c13bf80194f91d30b90d1cb628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1385284961
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,8 +1701,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10031e238a05e634a9dee55760bef97f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 0
-  height: 0
+  width: 1
+  height: 1
   seed: 0
   floorTile: {fileID: 11400000, guid: 76ee288ffca60984e96caf71445cd211, type: 2}
   wallTile: {fileID: 11400000, guid: f8d1dfbaaa070994298a990741323f34, type: 2}
@@ -1881,7 +1896,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.020479169, y: 0.4207037}
   m_AnchorMax: {x: 0.17860416, y: 0.483}
-  m_AnchoredPosition: {x: -0.8905029, y: -64.090454}
+  m_AnchoredPosition: {x: -0.890625, y: -64.090454}
   m_SizeDelta: {x: -0.5811, y: -25.8136}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1708961016
@@ -1964,9 +1979,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1418374208}
-        m_TargetAssemblyTypeName: MazeGenerator, Assembly-CSharp
-        m_MethodName: SetSeed
+      - m_Target: {fileID: 1272971575}
+        m_TargetAssemblyTypeName: MazeUI, Assembly-CSharp
+        m_MethodName: SetWidth
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2236,7 +2251,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2007906337}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2747,6 +2762,6 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 1418374209}
-  - {fileID: 2007906339}
   - {fileID: 1272971574}
   - {fileID: 584946474}
+  - {fileID: 2007906339}
