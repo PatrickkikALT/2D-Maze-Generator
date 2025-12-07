@@ -80,7 +80,7 @@ public class MazeGenerator : MonoBehaviour {
       loadingText.text = "";
       _jobHandle.Complete();
       _jobScheduled = false;
-
+      
       int cells = width * height;
       _managedGrid = new byte[cells];
       _gridNative.CopyTo(_managedGrid);

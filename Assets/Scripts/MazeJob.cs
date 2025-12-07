@@ -64,19 +64,33 @@ public struct MazeJob : IJob {
 
     Set(outGrid, entranceX, entranceY, 1);
     Set(outGrid, entranceX, 0, 1);
-    
+
     int exitX = width - 2;
     int exitY = height - 2;
     
     if ((exitX & 1) == 0) exitX--;
     if ((exitY & 1) == 0) exitY--;
-    
+
     exitX = math.max(1, exitX);
     exitY = math.max(1, exitY);
     
     Set(outGrid, exitX, exitY, 1);
-    Set(outGrid, width - 1, exitY, 1);
 
+    int finalExitY = math.max(1, height - 2);
+    if ((finalExitY & 1) == 0) finalExitY--;
+
+    int exitPathX = width - 2;
+    int exitPathY = finalExitY;
+    
+    if ((exitPathX & 1) == 0) exitPathX--;
+    exitPathX = math.max(1, exitPathX);
+    Set(outGrid, exitPathX, exitPathY, 1);
+
+    if (exitPathX < width - 2) {
+        Set(outGrid, exitPathX + 1, exitPathY, 1);
+    }
+    
+    Set(outGrid, width - 1, exitPathY, 1);
   }
 
   private void TryAddNeighbour(int x, int y, ref NativeList<int> list) {

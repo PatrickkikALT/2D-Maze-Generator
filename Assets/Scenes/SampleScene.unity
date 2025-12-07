@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 16014986}
   - component: {fileID: 16014985}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: SeedInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -667,7 +667,7 @@ GameObject:
   - component: {fileID: 338979279}
   - component: {fileID: 338979278}
   m_Layer: 5
-  m_Name: InputField (TMP) (2)
+  m_Name: HeightInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -857,7 +857,7 @@ GameObject:
   - component: {fileID: 411128175}
   - component: {fileID: 411128174}
   m_Layer: 5
-  m_Name: Button
+  m_Name: GenerateButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1736,7 +1736,7 @@ GameObject:
   - component: {fileID: 1649910144}
   - component: {fileID: 1649910143}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: GenerationText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1791,7 +1791,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0.3679245, b: 0.010857986, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1873,7 +1873,7 @@ GameObject:
   - component: {fileID: 1708961017}
   - component: {fileID: 1708961016}
   m_Layer: 5
-  m_Name: InputField (TMP) (1)
+  m_Name: WidthInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
