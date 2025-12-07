@@ -10,7 +10,7 @@ public class MazeGenerator : MonoBehaviour {
   [Header("Maze Settings")] 
   [Range(1, 250)] public int width;
   [Range(1, 250)] public int height;
-  public ulong seed; //ulong allows for biggest seed
+  public ulong seed; //ulong allows for largest seed
 
   [Header("Visualization")] 
   public TileBase floorTile;
@@ -40,21 +40,22 @@ public class MazeGenerator : MonoBehaviour {
   }
 
   private void OnDisable() {
+    //make sure we complete job before disabling
     if (_jobScheduled) {
       _jobHandle.Complete();
       _jobScheduled = false;
     }
 
-    if (_gridNative.IsCreated) _gridNative.Dispose();
+    if (_gridNative.IsCreated) _gridNative.Dispose(); //also make sure we get rid of native array to clear up memory
   }
 
   private void Start() {
     _moveCamera = Camera.main.GetComponent<MoveToMaze>();
-    
   }
 
   public void ScheduleGeneration(ulong generationSeed) {
     if (_jobScheduled) {
+      //stop old job before we start a new one
       _jobHandle.Complete();
       _jobScheduled = false;
       if (_gridNative.IsCreated) _gridNative.Dispose();
@@ -64,6 +65,7 @@ public class MazeGenerator : MonoBehaviour {
     _gridNative = new NativeArray<byte>(cells, Allocator.Persistent);
 
     _mazeJob = new MazeJob {
+      //'this' keyword isn't necessary here but i prefer it for clarity sake
       width = this.width,
       height = this.height,
       seed = generationSeed,
@@ -74,7 +76,8 @@ public class MazeGenerator : MonoBehaviour {
     _jobScheduled = true;
   }
 
-  private void Update() {
+  //fixed to save resources
+  private void FixedUpdate() {
     if (!_jobScheduled) return;
     if (_jobHandle.IsCompleted) {
       loadingText.text = "";
@@ -84,8 +87,9 @@ public class MazeGenerator : MonoBehaviour {
       int cells = width * height;
       _managedGrid = new byte[cells];
       _gridNative.CopyTo(_managedGrid);
-
+      //we use a tilemap because prefabs are too expensive and we're going 2d anyway
       StartCoroutine(DrawTilemap(_managedGrid));
+      //move the camera to make the maze fit otherwise 3/4 of the maze isnt visible lol
       _moveCamera.UpdateCamera(width, height, Camera.main);
       if (_gridNative.IsCreated) {
         _gridNative.Dispose();
@@ -122,6 +126,8 @@ public class MazeGenerator : MonoBehaviour {
     }
   }
 
+  //we do this in chunks because unity doesnt like clearing a tilemap for some reason
+  //tilemap.ClearAllTiles() drops fps to 1 frame per second for a solid 10 second for a large maze
   private IEnumerator ClearTilemap() {
     _finishedClearing = false;
     for (int y0 = 0; y0 < _previousDrawnHeight; y0 += chunkSize) {
