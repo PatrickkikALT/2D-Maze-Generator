@@ -24,11 +24,15 @@ public class MazeUI : MonoBehaviour {
 
   public void SetWidth(string width) {
     if (width == string.Empty) return;
-    MazeGenerator.Instance.width = int.Parse(width);
+    var i = int.Parse(width);
+    if (i is 0 or 1) return;
+    MazeGenerator.Instance.width = i;
   }
 
   public void SetHeight(string height) {
     if (height == string.Empty) return;
-    MazeGenerator.Instance.height = int.Parse(height);
+    var i = int.Parse(height);
+    if (i is 0 or 1) return;
+    MazeGenerator.Instance.height = i;
   }
 }

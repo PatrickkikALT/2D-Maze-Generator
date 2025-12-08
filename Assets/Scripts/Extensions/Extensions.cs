@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public static class Extensions {
   public static ulong Random(this ulong ul) {
@@ -12,5 +11,15 @@ public static class Extensions {
     //turn back into a ulong for use as a seed
     ulong result = BitConverter.ToUInt64(buffer, 0);
     return result;
+  }
+
+  public static DeviceType GetDeviceType() {
+    if (SystemInfo.deviceModel.StartsWith("iPhone", StringComparison.Ordinal)) {
+      return DeviceType.iPhone;
+    }
+    if (SystemInfo.deviceModel.StartsWith("iPad", StringComparison.Ordinal)) {
+      return DeviceType.iPad;
+    }
+    return DeviceType.Desktop;
   }
 }

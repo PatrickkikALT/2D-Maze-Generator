@@ -7,12 +7,13 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class MazeGenerator : MonoBehaviour {
-  [Header("Maze Settings")] 
-  [Range(1, 250)] public int width;
+  [Header("Maze Settings")] [Range(1, 250)]
+  public int width;
+
   [Range(1, 250)] public int height;
   public ulong seed; //ulong allows for largest seed
 
-  [Header("Visualization")] 
+  [Header("Tilemap Visualization")] public bool useTilemap;
   public TileBase floorTile;
   public TileBase wallTile;
   public Tilemap tilemap;
@@ -38,6 +39,7 @@ public class MazeGenerator : MonoBehaviour {
       Instance = this;
     }
   }
+  
 
   private void OnDisable() {
     //make sure we complete job before disabling
@@ -83,12 +85,13 @@ public class MazeGenerator : MonoBehaviour {
       loadingText.text = "";
       _jobHandle.Complete();
       _jobScheduled = false;
-      
+
       int cells = width * height;
       _managedGrid = new byte[cells];
       _gridNative.CopyTo(_managedGrid);
       //we use a tilemap because prefabs are too expensive and we're going 2d anyway
       StartCoroutine(DrawTilemap(_managedGrid));
+
       //move the camera to make the maze fit otherwise 3/4 of the maze isnt visible lol
       _moveCamera.UpdateCamera(width, height, Camera.main);
       if (_gridNative.IsCreated) {
@@ -96,7 +99,6 @@ public class MazeGenerator : MonoBehaviour {
       }
     }
   }
-
 
   //not only does this look better for what im going for, it also prevents having to draw the entire tilemap in one frame
   //which causes a huge fps dip
