@@ -41,8 +41,6 @@ public class MazeGenerator : MonoBehaviour {
       Instance = this;
     }
   }
-
-
   private void OnDisable() {
     //make sure we complete job before disabling
     if (_jobScheduled) {
@@ -105,8 +103,6 @@ public class MazeGenerator : MonoBehaviour {
   //not only does this look better for what im going for, it also prevents having to draw the entire tilemap in one frame
   //which causes a huge fps dip
   private IEnumerator DrawTilemap(byte[] grid, bool isSolved = false) {
-    // StartCoroutine(ClearTilemap());
-    // loadingText.text = "Clearing maze, this might take a while...";
     tilemap.ClearAllTiles();
     yield return null;
     loadingText.text = "Generating...";
@@ -153,7 +149,7 @@ public class MazeGenerator : MonoBehaviour {
 
     NativeArray<byte> solverOutput = new NativeArray<byte>(_managedGrid.Length, Allocator.TempJob);
 
-    MazeSolverJob solveJob = new MazeSolverJob {
+    SolverJob solveJob = new SolverJob {
       width = width,
       height = height,
       inGrid = solverInput,

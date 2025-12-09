@@ -4,7 +4,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 
 [BurstCompile]
-public struct MazeSolverJob : IJob {
+public struct SolverJob : IJob {
   public int width;
   public int height;
 
@@ -20,7 +20,11 @@ public struct MazeSolverJob : IJob {
     int cells = width * height;
 
     for (int i = 0; i < cells; i++) outGrid[i] = inGrid[i];
-
+    //adjust end position based on if the generation used any even numbers, otherwise this causes the end point to be in a wall
+    //which breaks the solver logic, dirty, but works.
+    if (width % 2 == 0) endX -= 1;
+    if (height % 2 == 0) endY -= 1;
+    
     if (!InBounds(startX, startY) || !InBounds(endX, endY)) return;
     if (Get(inGrid, startX, startY) == 0 || Get(inGrid, endX, endY) == 0) return;
 
@@ -71,7 +75,8 @@ public struct MazeSolverJob : IJob {
     cameFrom.Dispose();
   }
 
-  private void TryVisitNeighbor(int nx, int ny, int parentPacked, ref NativeList<int> queue, ref NativeArray<int> cameFrom) {
+  private void TryVisitNeighbor(int nx, int ny, int parentPacked, ref NativeList<int> queue,
+    ref NativeArray<int> cameFrom) {
     if (!InBounds(nx, ny)) return;
     if (Get(inGrid, nx, ny) == 0) return;
     int index = Idx(nx, ny);
@@ -81,6 +86,7 @@ public struct MazeSolverJob : IJob {
     cameFrom[index] = parentPacked;
     queue.Add(npacked);
   }
+
 
   private bool InBounds(int x, int y) => x >= 0 && y >= 0 && x < width && y < height;
 

@@ -105,7 +105,6 @@ public struct MazeJob : IJob {
   private byte Get(NativeArray<byte> grid, int x, int y) {
     return grid[y * width + x];
   }
-  //compress lol
   // keep only the lower 16 bits of x, shift y 16 bits left, then combine both into one int
   private static int Pack(int x, int y) => (x & 0xFFFF) | (y << 16); 
   // extract the lower 16 bits of p which represent the value
