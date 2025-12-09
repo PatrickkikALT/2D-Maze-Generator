@@ -2,7 +2,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
-
 [BurstCompile]
 public struct MazeJob : IJob {
   public int width;
@@ -57,13 +56,13 @@ public struct MazeJob : IJob {
       stack.Add(Pack(nx, ny));
     }
 
-    stack.Dispose(); //free memory so no memory leak here
+    stack.Dispose();
     
     int entranceX = 1;
     int entranceY = 1;
 
-    Set(outGrid, entranceX, entranceY, 1);
-    Set(outGrid, entranceX, 0, 1);
+    Set(outGrid, entranceX, entranceY, 2);
+    Set(outGrid, entranceX, 0, 2);
 
     int exitX = width - 2; 
     int exitY = height - 2;
@@ -84,13 +83,13 @@ public struct MazeJob : IJob {
     
     if ((exitPathX & 1) == 0) exitPathX--;
     exitPathX = math.max(1, exitPathX);
-    Set(outGrid, exitPathX, exitPathY, 1); //open path to exit
+    Set(outGrid, exitPathX, exitPathY, 2); //open path to exit
 
     if (exitPathX < width - 2) {
-        Set(outGrid, exitPathX + 1, exitPathY, 1);
+        Set(outGrid, exitPathX + 1, exitPathY, 2);
     }
     
-    Set(outGrid, width - 1, exitPathY, 1);
+    Set(outGrid, width - 1, exitPathY, 2); 
   }
 
   private void TryAddNeighbour(int x, int y, ref NativeList<int> list) {
@@ -106,7 +105,7 @@ public struct MazeJob : IJob {
   private byte Get(NativeArray<byte> grid, int x, int y) {
     return grid[y * width + x];
   }
-
+  //compress lol
   // keep only the lower 16 bits of x, shift y 16 bits left, then combine both into one int
   private static int Pack(int x, int y) => (x & 0xFFFF) | (y << 16); 
   // extract the lower 16 bits of p which represent the value

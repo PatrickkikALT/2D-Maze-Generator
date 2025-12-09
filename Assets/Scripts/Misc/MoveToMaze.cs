@@ -4,8 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class MoveToMaze : MonoBehaviour {
   #if UNITY_EDITOR
-  [EnumInt(typeof(DeviceType))]
-  public int simulateDevice;
+  public DeviceType simulateDevice;
   #endif
   private float _size;
   public float phoneSize, ipadSize, desktopSize;
@@ -20,7 +19,7 @@ public class MoveToMaze : MonoBehaviour {
     };
     
     #if UNITY_EDITOR
-    switch (simulateDevice) {
+    switch ((int)simulateDevice) {
       case 1:
         _size = phoneSize;
         break;
