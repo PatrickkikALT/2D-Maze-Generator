@@ -26,7 +26,7 @@ public struct SolverJob : IJob {
     if (height % 2 == 0) endY -= 1;
     
     if (!InBounds(startX, startY) || !InBounds(endX, endY)) return;
-    if (Get(inGrid, startX, startY) == 0 || Get(inGrid, endX, endY) == 0) return;
+    if (Get(inGrid, startX, startY) == 0) return;
 
     NativeArray<int> cameFrom = new NativeArray<int>(cells, Allocator.Temp);
     for (int i = 0; i < cells; i++) cameFrom[i] = -1;
@@ -89,8 +89,7 @@ public struct SolverJob : IJob {
 
 
   private bool InBounds(int x, int y) => x >= 0 && y >= 0 && x < width && y < height;
-
-  private void Set(NativeArray<byte> grid, int x, int y, byte v) => grid[y * width + x] = v;
+  
   private byte Get(NativeArray<byte> grid, int x, int y) => grid[y * width + x];
 
   private int Idx(int x, int y) => y * width + x;

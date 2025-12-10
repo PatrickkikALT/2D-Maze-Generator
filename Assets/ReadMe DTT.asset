@@ -14,8 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: 'Hey!
 
-    This is a job based maze generator that visualizes it using
-    tilemaps.
+    This is a job based maze generator using the depth first
+    search/recursive backtrack algorithm that visualizes it using tilemaps.
 
-    I chose for tilemaps because they''re cheaper than using standard
-    prefabs. '
+    I
+    chose for tilemaps because they''re cheaper than using standard prefabs.
+
+    It
+    also comes with another job based solver that colors the path green.
+
+    The
+    maze''s size on camera will change based on the device used, I''ve tested this
+    with Unity''s Simulator for iPad 4 Mini and the iPhone 12. You can simulate this
+    via the enum input in the MoveToMaze script on the camera.
+
+
+'

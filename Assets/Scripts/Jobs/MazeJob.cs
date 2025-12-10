@@ -44,7 +44,7 @@ public struct MazeJob : IJob {
       int ni = rng.NextInt(0, neighbours.Length);
       int npacked = neighbours[ni];
       neighbours.Dispose();
-
+      
       int nx = UnpackX(npacked);
       int ny = UnpackY(npacked);
       int mx = cx + (nx - cx) / 2; 

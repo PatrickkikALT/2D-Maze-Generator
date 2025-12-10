@@ -7,6 +7,7 @@ using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Unity.Burst;
+using UnityEngine.Serialization;
 
 public class MazeGenerator : MonoBehaviour {
   [Header("Maze Settings")] [Range(1, 250)]
@@ -27,7 +28,7 @@ public class MazeGenerator : MonoBehaviour {
   private NativeArray<byte> _gridNative;
   private JobHandle _jobHandle;
   private MazeJob _mazeJob;
-  private byte[] _managedGrid;
+  public byte[] managedGrid;
   private bool _jobScheduled;
   private MoveToMaze _moveCamera;
   private bool _finishedClearing;
@@ -87,10 +88,10 @@ public class MazeGenerator : MonoBehaviour {
       _jobScheduled = false;
 
       int cells = width * height;
-      _managedGrid = new byte[cells];
-      _gridNative.CopyTo(_managedGrid);
+      managedGrid = new byte[cells];
+      _gridNative.CopyTo(managedGrid);
       //we use a tilemap because prefabs are too expensive and we're going 2d anyway
-      StartCoroutine(DrawTilemap(_managedGrid));
+      StartCoroutine(DrawTilemap(managedGrid));
 
       //move the camera to make the maze fit otherwise 3/4 of the maze isnt visible lol
       _moveCamera.UpdateCamera(width, height, Camera.main);
@@ -102,7 +103,7 @@ public class MazeGenerator : MonoBehaviour {
 
   //not only does this look better for what im going for, it also prevents having to draw the entire tilemap in one frame
   //which causes a huge fps dip
-  private IEnumerator DrawTilemap(byte[] grid, bool isSolved = false) {
+  public IEnumerator DrawTilemap(byte[] grid, bool isSolved = false) {
     tilemap.ClearAllTiles();
     yield return null;
     loadingText.text = "Generating...";
@@ -137,36 +138,5 @@ public class MazeGenerator : MonoBehaviour {
     }
 
     loadingText.text = "";
-  }
-
-  public void SolveAndDraw() {
-    if (_managedGrid == null) {
-      return;
-    }
-
-    NativeArray<byte> solverInput = new NativeArray<byte>(_managedGrid.Length, Allocator.TempJob);
-    solverInput.CopyFrom(_managedGrid);
-
-    NativeArray<byte> solverOutput = new NativeArray<byte>(_managedGrid.Length, Allocator.TempJob);
-
-    SolverJob solveJob = new SolverJob {
-      width = width,
-      height = height,
-      inGrid = solverInput,
-      outGrid = solverOutput,
-      startX = 1,
-      startY = 1,
-      endX = width - 2,
-      endY = height - 2
-    };
-
-    solveJob.Schedule().Complete();
-    solverOutput.CopyTo(_managedGrid);
-
-    solverInput.Dispose();
-    solverOutput.Dispose();
-
-    StopAllCoroutines();
-    StartCoroutine(DrawTilemap(_managedGrid, true));
   }
 }
